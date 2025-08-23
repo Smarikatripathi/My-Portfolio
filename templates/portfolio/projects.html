@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load portfolio_extras %}
+
+{% block title %}Projects - {{ personal_info.name|default:"Portfolio" }}{% endblock %}
+
+{% block content %}
+<!-- Projects Hero Section -->
+<section class="py-5 bg-light" id="projects-hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center" data-aos="fade-up">
+                <h1 class="display-4 fw-bold mb-4">My Projects</h1>
+                <p class="lead mb-4">A collection of my work and projects that showcase my skills and expertise</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Grid Section -->
+<section class="py-5" id="projects-grid">
+    <div class="container">
+        <div class="row">
+            {% for project in projects %}
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|multiply:100 }}">
+                    <div class="project-card card h-100 border-0 shadow-sm">
+                        {% if project.image %}
+                            <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-project-diagram fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="card-text">{{ project.description }}</p>
+                            <div class="mb-3">
+                                {% for tech in project.technologies.split %}
+                                    <span class="badge bg-primary me-1 mb-1">{{ tech }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <div class="d-flex justify-content-between">
+                                {% if project.github_url %}
+                                    <a href="{{ project.github_url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                        <i class="fab fa-github me-1"></i>Code
+                                    </a>
+                                {% endif %}
+                                {% if project.live_url %}
+                                    <a href="{{ project.live_url }}" class="btn btn-sm btn-primary" target="_blank">
+                                        <i class="fas fa-external-link-alt me-1"></i>Live Demo
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <div class="py-5">
+                        <i class="fas fa-folder-open fa-4x text-muted mb-4"></i>
+                        <h3 class="text-muted">No Projects Yet</h3>
+                        <p class="text-muted">Projects will be displayed here. Add them through the admin panel.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white" id="projects-cta">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h2 class="mb-4">Interested in Working Together?</h2>
+                <p class="lead mb-4">Let's discuss your project and see how I can help bring your ideas to life.</p>
+                <a href="{% url 'portfolio:contact' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Get In Touch
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

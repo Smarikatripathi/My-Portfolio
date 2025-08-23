@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load portfolio_extras %}
+
+{% block title %}Contact - {{ personal_info.name|default:"Portfolio" }}{% endblock %}
+
+{% block content %}
+<!-- Contact Hero Section -->
+<section class="py-5 bg-light" id="contact-hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center" data-aos="fade-up">
+                <h1 class="display-4 fw-bold mb-4">Get In Touch</h1>
+                <p class="lead mb-4">I'm always interested in new opportunities and exciting projects. Let's discuss how we can collaborate!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-5" id="contact">
+    <div class="container">
+        <div class="row">
+            <!-- Contact Information -->
+            <div class="col-lg-5 mb-5" data-aos="fade-right">
+                <h3 class="mb-4">Contact Information</h3>
+                {% if personal_info %}
+                    <div class="contact-info">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="contact-icon me-3">
+                                <i class="fas fa-envelope text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Email</h6>
+                                <a href="mailto:{{ personal_info.email }}" class="text-muted">{{ personal_info.email }}</a>
+                            </div>
+                        </div>
+                        
+                        {% if personal_info.phone %}
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="contact-icon me-3">
+                                    <i class="fas fa-phone text-primary"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">Phone</h6>
+                                    <a href="tel:{{ personal_info.phone }}" class="text-muted">{{ personal_info.phone }}</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if personal_info.location %}
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="contact-icon me-3">
+                                    <i class="fas fa-map-marker-alt text-primary"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">Location</h6>
+                                    <span class="text-muted">{{ personal_info.location }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if personal_info.website %}
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="contact-icon me-3">
+                                    <i class="fas fa-globe text-primary"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">Website</h6>
+                                    <a href="{{ personal_info.website }}" class="text-muted" target="_blank">{{ personal_info.website }}</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                
+                <!-- Social Links -->
+                {% if personal_info %}
+                    <div class="social-links mt-4">
+                        <h6 class="mb-3">Follow Me</h6>
+                        <div class="d-flex">
+                            {% if personal_info.linkedin %}
+                                <a href="{{ personal_info.linkedin }}" class="btn btn-outline-primary me-2" target="_blank">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                            {% endif %}
+                            {% if personal_info.github %}
+                                <a href="{{ personal_info.github }}" class="btn btn-outline-primary me-2" target="_blank">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            {% endif %}
+                            {% if personal_info.twitter %}
+                                <a href="{{ personal_info.twitter }}" class="btn btn-outline-primary me-2" target="_blank">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Contact Form -->
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="contact-form">
+                    <h3 class="mb-4">Send Me a Message</h3>
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post" id="contactForm">
+                        {% csrf_token %}
+                        {{ contact_form|crispy }}
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section (Optional) -->
+{% if personal_info.location %}
+<section class="py-5 bg-light" id="map">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-4" data-aos="fade-up">
+                <h3>Find Me Here</h3>
+                <p class="text-muted">{{ personal_info.location }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" data-aos="fade-up">
+                <div class="map-placeholder bg-light border rounded d-flex align-items-center justify-content-center" style="height: 300px;">
+                    <div class="text-center">
+                        <i class="fas fa-map fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Map integration can be added here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('contactForm');
+    
+    form.addEventListener('submit', function(e) {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+        submitBtn.disabled = true;
+        
+        // Re-enable button after 5 seconds in case of error
+        setTimeout(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }, 5000);
+    });
+});
+</script>
+{% endblock %} 

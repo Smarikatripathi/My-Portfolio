@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load portfolio_extras %}
+
+{% block title %}About - {{ personal_info.name|default:"Portfolio" }}{% endblock %}
+
+{% block content %}
+<!-- About Hero Section -->
+<section class="py-5 bg-light" id="about-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-4 fw-bold mb-4">About Me</h1>
+                <p class="lead mb-4">{{ personal_info.bio|default:"I am Smarika Tripathi, a third-year Computer Engineering student at Pokhara University, passionate about building secure, efficient, and scalable systems. My interests lie in web development, biometric authentication, and IoT-based solutions. I enjoy solving real-world problems through code and exploring the synergy between hardware and software. Currently, I am actively learning full-stack development, embedded systems, and AI/ML. I am open to internships, collaborations, and research opportunities." }}</p>
+                
+                {% if personal_info %}
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-envelope text-primary me-3"></i>
+                                <span>{{ personal_info.email|default:"smarikatripathi1@gmail.com" }}</span>
+                            </div>
+                            {% if personal_info.phone %}
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-phone text-primary me-3"></i>
+                                    <span>{{ personal_info.phone }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-6">
+                            {% if personal_info.location %}
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-map-marker-alt text-primary me-3"></i>
+                                    <span>{{ personal_info.location }}</span>
+                                </div>
+                            {% endif %}
+                            {% if personal_info.website %}
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-globe text-primary me-3"></i>
+                                    <a href="{{ personal_info.website }}" target="_blank">{{ personal_info.website }}</a>
+                                </div>
+                            {% endif %}
+                            {% if not personal_info.linkedin %}
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fab fa-linkedin text-primary me-3"></i>
+                                    <a href="https://www.linkedin.com/in/smarika-tripathi-305273257/" target="_blank">LinkedIn</a>
+                                </div>
+                            {% endif %}
+                            {% if not personal_info.github %}
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fab fa-github text-primary me-3"></i>
+                                    <a href="https://github.com/Smarikatripathi" target="_blank">GitHub</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                {% if personal_info.profile_picture %}
+                    <img src="{{ personal_info.profile_picture.url }}" alt="{{ personal_info.name }}" class="img-fluid rounded shadow-lg">
+                {% else %}
+                    <div class="placeholder-image bg-primary rounded d-flex align-items-center justify-content-center shadow-lg" style="height: 400px;">
+                        <i class="fas fa-user fa-6x text-white"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section class="py-5" id="skills-detailed">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Skills & Expertise</h2>
+                <p class="text-muted">My technical skills and competencies across different categories</p>
+            </div>
+        </div>
+        
+        <!-- Skills by Category -->
+        {% regroup skills by category as skills_by_category %}
+        {% for category in skills_by_category %}
+            <div class="row mb-5" data-aos="fade-up" data-aos-delay="{{ forloop.counter|multiply:100 }}">
+                <div class="col-12">
+                    <h3 class="mb-4">{{ category.grouper|title }}</h3>
+                    <div class="row">
+                        {% for skill in category.list %}
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="skill-item">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="mb-0">{{ skill.name }}</h6>
+                                        <span class="text-muted">{{ skill.proficiency }}%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-primary" role="progressbar" 
+                                             style="width: {{ skill.proficiency }}%" 
+                                             aria-valuenow="{{ skill.proficiency }}" 
+                                             aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">Skills will be displayed here. Add them through the admin panel.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Skills Chart Section -->
+{% if skills %}
+<section class="py-5 bg-light" id="skills-chart">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Skills Overview</h2>
+                <p class="text-muted">Visual representation of my skills proficiency</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8 mx-auto" data-aos="fade-up">
+                <canvas id="skillsChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Personal Qualities Section -->
+<section class="py-5" id="qualities">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Personal Qualities</h2>
+                <p class="text-muted">What drives me and how I approach my work</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="quality-card text-center">
+                    <div class="quality-icon mb-3">
+                        <i class="fas fa-lightbulb fa-3x text-primary"></i>
+                    </div>
+                    <h5>Innovation</h5>
+                    <p class="text-muted">Always seeking creative solutions and new approaches to challenges.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="quality-card text-center">
+                    <div class="quality-icon mb-3">
+                        <i class="fas fa-users fa-3x text-primary"></i>
+                    </div>
+                    <h5>Collaboration</h5>
+                    <p class="text-muted">Strong team player who values diverse perspectives and collective success.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="quality-card text-center">
+                    <div class="quality-icon mb-3">
+                        <i class="fas fa-rocket fa-3x text-primary"></i>
+                    </div>
+                    <h5>Adaptability</h5>
+                    <p class="text-muted">Quick to learn new technologies and adapt to changing environments.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="quality-card text-center">
+                    <div class="quality-icon mb-3">
+                        <i class="fas fa-target fa-3x text-primary"></i>
+                    </div>
+                    <h5>Focus</h5>
+                    <p class="text-muted">Committed to delivering high-quality results with attention to detail.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white" id="about-cta">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h2 class="mb-4">Ready to Work Together?</h2>
+                <p class="lead mb-4">Let's discuss your project and see how I can help bring your vision to life.</p>
+                <a href="{% url 'portfolio:contact' %}" class="btn btn-light btn-lg me-3">
+                    <i class="fas fa-envelope me-2"></i>Get In Touch
+                </a>
+                {% if personal_info.resume %}
+                    <a href="{% url 'portfolio:download_resume' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-download me-2"></i>Download CV
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Skills Chart
+{% if skills %}
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('skillsChart').getContext('2d');
+    const skillsData = {
+        labels: [{% for skill in skills %}'{{ skill.name }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Proficiency (%)',
+            data: [{% for skill in skills %}{{ skill.proficiency }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+            backgroundColor: 'rgba(0, 123, 255, 0.2)',
+            borderColor: 'rgba(0, 123, 255, 1)',
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(0, 123, 255, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6
+        }]
+    };
+    
+    new Chart(ctx, {
+        type: 'radar',
+        data: skillsData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        stepSize: 20
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+});
+{% endif %}
+</script>
+{% endblock %} 

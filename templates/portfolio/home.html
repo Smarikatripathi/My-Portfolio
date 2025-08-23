@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load portfolio_extras %}
+
+{% block title %}{{ personal_info.name }} - {{ personal_info.title }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section d-flex align-items-center min-vh-100" id="home" style="background: linear-gradient(135deg, #0f1419 0%, #1e3a8a 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="hero-content">
+                    <h1 class="display-4 fw-bold mb-3 text-white">
+                        Hi, I'm <span class="text-warning">{{ personal_info.name|default:"Your Name" }}</span>
+                    </h1>
+                    <h2 class="h3 text-light mb-4">{{ personal_info.title|default:"Professional Title" }}</h2>
+                    <p class="lead mb-4 text-light">{{ personal_info.bio|default:"A passionate professional with expertise in various technologies and a drive for creating innovative solutions." }}</p>
+                    
+                    <div class="hero-buttons">
+                        <a href="{% url 'portfolio:about' %}" class="btn btn-warning btn-lg me-3 text-dark fw-bold">
+                            <i class="fas fa-user me-2"></i>About Me
+                        </a>
+                        {% if personal_info.resume %}
+                            <a href="{% url 'portfolio:download_resume' %}" class="btn btn-outline-light btn-lg" style="border-width: 2px;">
+                                <i class="fas fa-download me-2"></i>Download CV
+                            </a>
+                        {% endif %}
+                    </div>
+                    
+                    {% if personal_info %}
+                        <div class="social-links mt-4">
+                            {% if personal_info.linkedin %}
+                                <a href="{{ personal_info.linkedin }}" class="text-warning me-3" target="_blank" style="transition: all 0.3s ease;">
+                                    <i class="fab fa-linkedin fa-2x"></i>
+                                </a>
+                            {% endif %}
+                            {% if personal_info.github %}
+                                <a href="{{ personal_info.github }}" class="text-warning me-3" target="_blank" style="transition: all 0.3s ease;">
+                                    <i class="fab fa-github fa-2x"></i>
+                                </a>
+                            {% endif %}
+                            {% if personal_info.twitter %}
+                                <a href="{{ personal_info.twitter }}" class="text-warning me-3" target="_blank" style="transition: all 0.3s ease;">
+                                    <i class="fab fa-twitter fa-2x"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="hero-image text-center">
+                    {% if personal_info.profile_picture %}
+                        <img src="{{ personal_info.profile_picture.url }}" alt="{{ personal_info.name }}" class="img-fluid rounded-circle shadow-lg" style="max-width: 400px;">
+                    {% else %}
+                        <div class="placeholder-image bg-primary rounded-circle d-inline-flex align-items-center justify-content-center shadow-lg" style="width: 400px; height: 400px;">
+                            <i class="fas fa-user fa-6x text-white"></i>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Preview Section -->
+<section class="py-5" id="about-preview" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h2 class="section-title mb-4" style="color: #1e3a8a;">About Me</h2>
+                <p class="lead mb-4 text-dark">{{ personal_info.bio|default:"I am a dedicated professional with a passion for technology and innovation. With years of experience in various domains, I strive to create meaningful solutions that make a difference." }}</p>
+                <a href="{% url 'portfolio:about' %}" class="btn text-white" style="background: linear-gradient(135deg, #0f1419 0%, #1e3a8a 100%); border: none;">Learn More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section class="py-5" id="skills">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title" style="color: #1e3a8a;">Skills & Expertise</h2>
+                <p class="text-muted">My technical skills and competencies</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            {% for skill in skills %}
+                <div class="col-md-6 col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|multiply:100 }}">
+                    <div class="skill-card card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            {% if skill.icon %}
+                                <i class="{{ skill.icon }} fa-3x text-primary mb-3"></i>
+                            {% else %}
+                                <i class="fas fa-code fa-3x text-primary mb-3"></i>
+                            {% endif %}
+                            <h5 class="card-title">{{ skill.name }}</h5>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ skill.proficiency }}%" 
+                                     aria-valuenow="{{ skill.proficiency }}" aria-valuemin="0" aria-valuemax="100">
+                                    {{ skill.proficiency }}%
+                                </div>
+                            </div>
+                            <small class="text-muted">{{ skill.get_category_display }}</small>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Skills will be displayed here. Add them through the admin panel.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Projects Section -->
+<section class="py-5" id="projects" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title" style="color: #1e3a8a;">Featured Projects</h2>
+                <p class="text-muted">Some of my recent work</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            {% for project in projects %}
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|multiply:100 }}">
+                    <div class="project-card card h-100 border-0 shadow-sm">
+                        {% if project.image %}
+                            <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
+                        {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-project-diagram fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="card-text">{{ project.description|truncatewords:20 }}</p>
+                            <div class="mb-3">
+                                {% for tech in project.technologies.split|slice:":3" %}
+                                    <span class="badge bg-primary me-1">{{ tech }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <div class="d-flex justify-content-between">
+                                {% if project.github_url %}
+                                    <a href="{{ project.github_url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                        <i class="fab fa-github me-1"></i>Code
+                                    </a>
+                                {% endif %}
+                                {% if project.live_url %}
+                                    <a href="{{ project.live_url }}" class="btn btn-sm btn-primary" target="_blank">
+                                        <i class="fas fa-external-link-alt me-1"></i>Live
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Featured projects will be displayed here. Add them through the admin panel.</p>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:projects' %}" class="btn btn-primary">View All Projects</a>
+        </div>
+    </div>
+</section>
+
+<!-- Education Section -->
+<section class="py-5" id="education">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title" style="color: #1e3a8a;">Education</h2>
+                <p class="text-muted">My academic background</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            {% for edu in education %}
+                <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|multiply:100 }}">
+                    <div class="education-card card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">{{ edu.degree }}</h5>
+                                <span class="badge bg-primary">{{ edu.start_date.year }} - {% if edu.current %}Present{% else %}{{ edu.end_date.year }}{% endif %}</span>
+                            </div>
+                            <h6 class="text-primary">{{ edu.institution }}</h6>
+                            <p class="text-muted">{{ edu.field_of_study }}</p>
+                            {% if edu.description %}
+                                <p class="card-text">{{ edu.description }}</p>
+                            {% endif %}
+                            {% if edu.gpa %}
+                                <small class="text-muted">GPA: {{ edu.gpa }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Education details will be displayed here. Add them through the admin panel.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Certifications Section -->
+{% if certifications %}
+<section class="py-5 bg-light" id="certifications">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Certifications</h2>
+                <p class="text-muted">Professional certifications and achievements</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            {% for cert in certifications %}
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|multiply:100 }}">
+                    <div class="certification-card card border-0 shadow-sm h-100">
+                        {% if cert.image %}
+                            <img src="{{ cert.image.url }}" class="card-img-top" alt="{{ cert.name }}">
+                        {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                <i class="fas fa-certificate fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ cert.name }}</h5>
+                            <h6 class="text-primary">{{ cert.issuing_organization }}</h6>
+                            <p class="text-muted">Issued: {{ cert.issue_date|date:"M Y" }}</p>
+                            {% if cert.credential_url %}
+                                <a href="{{ cert.credential_url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                    Verify Certificate
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Testimonials Section -->
+{% if testimonials %}
+<section class="py-5" id="testimonials">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">What People Say</h2>
+                <p class="text-muted">Testimonials from colleagues and clients</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            {% for testimonial in testimonials %}
+                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|multiply:100 }}">
+                    <div class="testimonial-card card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                {% for i in "12345" %}
+                                    <i class="fas fa-star {% if forloop.counter <= testimonial.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                                {% endfor %}
+                            </div>
+                            <p class="card-text">{{ testimonial.content }}</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                {% if testimonial.image %}
+                                    <img src="{{ testimonial.image.url }}" class="rounded-circle me-3" alt="{{ testimonial.name }}" style="width: 50px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="text-start">
+                                    <h6 class="mb-0">{{ testimonial.name }}</h6>
+                                    <small class="text-muted">{{ testimonial.position }} at {{ testimonial.company }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Contact CTA Section -->
+<section class="py-5 text-white" id="contact-cta" style="background: linear-gradient(135deg, #0f1419 0%, #1e3a8a 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h2 class="mb-4">Let's Work Together</h2>
+                <p class="lead mb-4">I'm always interested in new opportunities and exciting projects. Let's discuss how we can collaborate!</p>
+                <a href="{% url 'portfolio:contact' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Get In Touch
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 
