@@ -418,9 +418,54 @@ html {
     box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
 }
 
+/* Call-to-Action Section */
+.section-cta {
+    background: linear-gradient(135deg, #0f1419 0%, #1e3a8a 100%);
+}
+
+.section-cta h2,
+.section-cta .lead,
+.section-cta p,
+.section-cta a,
+.section-cta span {
+    color: #f8f9fa !important;
+}
+
+.section-cta .lead {
+    color: rgba(248, 249, 250, 0.9) !important;
+}
+
+.section-cta .btn-light {
+    color: #0f1419 !important;
+    background-color: #ffffff !important;
+    border-color: rgba(255,255,255,0.3) !important;
+}
+
+.section-cta .btn-outline-light {
+    color: #ffffff !important;
+    border-color: rgba(255,255,255,0.8) !important;
+}
+
+.section-cta .btn-outline-light:hover,
+.section-cta .btn-light:hover {
+    background-color: rgba(255,255,255,0.15) !important;
+    color: #ffffff !important;
+}
+
 /* Footer */
 footer {
     margin-top: auto;
+    background: linear-gradient(135deg, #0f1419 0%, #1e3a8a 100%);
+}
+
+footer h5,
+footer p,
+footer a {
+    color: #f8f9fa !important;
+}
+
+footer .text-muted {
+    color: rgba(248, 249, 250, 0.85) !important;
 }
 
 footer .social-links a {
@@ -429,5 +474,5 @@ footer .social-links a {
 
 footer .social-links a:hover {
     transform: translateY(-2px);
-    color: var(--primary-color) !important;
+    color: #ffffff !important;
 } 
