@@ -15,7 +15,10 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    "www.smarikatripathi.com.np",
+    "smarikatripathi.com.np",
+]
 
 # Application definition
 INSTALLED_APPS = [
