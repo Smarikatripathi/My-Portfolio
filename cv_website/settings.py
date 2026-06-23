@@ -18,6 +18,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = [
     "www.smarikatripathi.com.np",
     "smarikatripathi.com.np",
+    "smarikatripathi1.onrender.com",
 ]
 
 # Application definition
@@ -123,4 +124,4 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='your-app-password')
 # Static files storage
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-ALLOWED_HOSTS = ['.onrender.com']    
+#ALLOWED_HOSTS = ['.onrender.com']    
